@@ -12,3 +12,12 @@ stock_picker/venv/*
 
 .venv
 venv/*
+
+# Additional entries for security
+.DS_Store
+*.pyc
+__pycache__/
+.env*
+.vscode/
+*.log
+.git-credentials
