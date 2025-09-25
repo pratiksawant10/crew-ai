@@ -1,0 +1,9 @@
+Indeed, there is a salient necessity for the enactment of a law mandating all cars to be electric. Firstly, this law would significantly reduce air pollution levels. The harmful emissions from conventional vehicles contribute to the deterioration of air quality, leading to negative health outcomes such as respiratory diseases and premature death. According to the World Health Organization, air pollution causes around 7 million premature deaths worldwide yearly. 
+
+Secondly, electrification of all vehicles would significantly mitigate climate change by reducing carbon dioxide and other greenhouse gases. ICE cars generate about 333 million tons of carbon dioxide per year which is approximately 20% of total U.S. emissions according to the Environmental Protection Agency. 
+
+Thirdly, electric vehicles are more energy efficient compared to their ICE counterparts. They convert about 59%–62% of the electrical energy from the grid to power at the wheels whereas gasoline vehicles only convert about 17%–21% of the energy stored in gasoline to power at the wheels as per the U.S. Department of Energy. Hence, this transition would lead to a more efficient use of resources.
+
+Additionally, we cannot neglect the economic benefits that could come from this transition. According to a study published by the International Council on Clean Transportation, it is projected that by 2030, electric vehicles are likely to cost the same or even less than conventional vehicles, considering both purchasing price and running costs. Therefore, this could lead to a substantial saving for consumers in the long run.
+
+In conclusion, a law mandating all cars to be electric would greatly contribute to a more sustainable, healthier, and economically advantageous future. We therefore, must seriously consider its implementation.

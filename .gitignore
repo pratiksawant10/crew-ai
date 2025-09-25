@@ -1,0 +1,14 @@
+financial_research/.env
+financial_research/venv/*
+
+debate/.env
+debate/venv/*
+
+engineering_team/.env
+engineering_team/venv/*
+
+stock_picker/.env
+stock_picker/venv/*
+
+.venv
+venv/*

@@ -1,0 +1,41 @@
+design_task:
+  description: >
+    Take the high-level requirements described here and prepare a detailed system design.
+    Define the architecture, outline the classes, methods, and APIs in the backend module.
+    Here are the requirements: {requirements}
+    IMPORTANT: Only output the design in markdown format, clearly describing the classes, functions, and any expected frontend interactions.
+  expected_output: >
+    A detailed design document identifying the classes, functions, and APIs to be implemented.
+  agent: engineering_lead
+  output_file: output/{module_name}_design.md
+
+
+frontend_task:
+  description: >
+    Build a simple HTML/JavaScript frontend that demonstrates the given backend module {module_name}.
+    The frontend should allow a user to interact with the backend class {class_name}, visualize results,
+    and serve as a lightweight prototype.
+    Here are the requirements: {requirements}
+  expected_output: >
+    A single HTML/JavaScript file (index.html with embedded JS or linked script.js) that demonstrates
+    the backend class through basic user interactions.
+    IMPORTANT: Output ONLY the raw HTML/JS code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid code that can be directly saved and opened in a browser.
+  agent: frontend_engineer
+  context:
+    - design_task
+  output_file: output/index.html
+
+
+test_task:
+  description: >
+    Write unit tests for the given backend module {module_name}.
+    The tests should cover the class {class_name}, validating core functionality, edge cases, and error handling.
+  expected_output: >
+    A test_{module_name}.py file containing unit tests for the backend module.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to a file and executed.
+  agent: test_engineer
+  context:
+    - design_task
+  output_file: output/test_{module_name}.py

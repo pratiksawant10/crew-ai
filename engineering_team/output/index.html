@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Simulation Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { margin: 5px; }
+        .section { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Trading Simulation Platform</h1>
+    
+    <div class="section" id="account">
+        <h2>Create Account</h2>
+        <input type="text" id="name" placeholder="Name">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="createAccount()">Create Account</button>
+        <p id="accountMessage"></p>
+    </div>
+    
+    <div class="section" id="balance">
+        <h2>Manage Funds</h2>
+        <input type="number" id="amount" placeholder="Amount">
+        <button onclick="deposit()">Deposit</button>
+        <button onclick="withdraw()">Withdraw</button>
+        <p id="balanceMessage"></p>
+    </div>
+    
+    <div class="section" id="trading">
+        <h2>Trade Shares</h2>
+        <input type="text" id="symbol" placeholder="Symbol (AAPL, TSLA, GOOGL)">
+        <input type="number" id="quantity" placeholder="Quantity">
+        <button onclick="buyShares()">Buy</button>
+        <button onclick="sellShares()">Sell</button>
+        <p id="tradeMessage"></p>
+    </div>
+    
+    <div class="section" id="report">
+        <h2>Reports</h2>
+        <button onclick="reportHoldings()">Report Holdings</button>
+        <button onclick="reportProfitLoss()">Report Profit/Loss</button>
+        <button onclick="listTransactions()">List Transactions</button>
+        <p id="reportMessage"></p>
+    </div>
+    
+    <script>
+        const userId = 1;  // Temp hard-coded user ID for demonstration
+
+        function createAccount() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            fetch('/api/create_account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('accountMessage').innerText = data.message);
+        }
+
+        function deposit() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            fetch('/api/deposit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, amount })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('balanceMessage').innerText = data.message);
+        }
+
+        function withdraw() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            fetch('/api/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, amount })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('balanceMessage').innerText = data.message);
+        }
+
+        function buyShares() {
+            const symbol = document.getElementById('symbol').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            fetch('/api/buy_shares', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, symbol, quantity })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('tradeMessage').innerText = data.message);
+        }
+
+        function sellShares() {
+            const symbol = document.getElementById('symbol').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            fetch('/api/sell_shares', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId, symbol, quantity })
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById('tradeMessage').innerText = data.message);
+        }
+
+        function reportHoldings() {
+            fetch(`/api/report_holdings?user_id=${userId}`)
+            .then(response => response.json())
+            .then(data => document.getElementById('reportMessage').innerText = JSON.stringify(data.holdings));
+        }
+
+        function reportProfitLoss() {
+            fetch(`/api/report_profit_loss?user_id=${userId}`)
+            .then(response => response.json())
+            .then(data => document.getElementById('reportMessage').innerText = `Profit/Loss: ${data.profit_loss}`);
+        }
+
+        function listTransactions() {
+            fetch(`/api/list_transactions?user_id=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                const transactions = data.transactions.map(t => `${t.date}: ${t.transaction_type} ${t.quantity} ${t.symbol} at ${t.price}`).join('\n');
+                document.getElementById('reportMessage').innerText = transactions;
+            });
+        }
+    </script>
+</body>
+</html>
