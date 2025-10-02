@@ -59,11 +59,23 @@ class EngineeringTeam():
     #     )
 
     @task
-    def frontend_task(self) -> Task:
+    def frontend_html_task(self) -> Task:
         return Task(
-            config=self.tasks_config['frontend_task'],
+            config=self.tasks_config['frontend_html_task'],
         )
 
+    @task
+    def frontend_css_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['frontend_css_task'],
+        )
+
+    @task
+    def frontend_js_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['frontend_js_task'],
+        )
+        
     @task
     def test_task(self) -> Task:
         return Task(

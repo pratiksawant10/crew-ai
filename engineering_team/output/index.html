@@ -1,134 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trading Simulation Platform</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        input, button { margin: 5px; }
-        .section { margin-bottom: 20px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h1>Trading Simulation Platform</h1>
-    
-    <div class="section" id="account">
-        <h2>Create Account</h2>
-        <input type="text" id="name" placeholder="Name">
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="createAccount()">Create Account</button>
-        <p id="accountMessage"></p>
-    </div>
-    
-    <div class="section" id="balance">
-        <h2>Manage Funds</h2>
-        <input type="number" id="amount" placeholder="Amount">
-        <button onclick="deposit()">Deposit</button>
-        <button onclick="withdraw()">Withdraw</button>
-        <p id="balanceMessage"></p>
-    </div>
-    
-    <div class="section" id="trading">
-        <h2>Trade Shares</h2>
-        <input type="text" id="symbol" placeholder="Symbol (AAPL, TSLA, GOOGL)">
-        <input type="number" id="quantity" placeholder="Quantity">
-        <button onclick="buyShares()">Buy</button>
-        <button onclick="sellShares()">Sell</button>
-        <p id="tradeMessage"></p>
-    </div>
-    
-    <div class="section" id="report">
-        <h2>Reports</h2>
-        <button onclick="reportHoldings()">Report Holdings</button>
-        <button onclick="reportProfitLoss()">Report Profit/Loss</button>
-        <button onclick="listTransactions()">List Transactions</button>
-        <p id="reportMessage"></p>
-    </div>
-    
-    <script>
-        const userId = 1;  // Temp hard-coded user ID for demonstration
+    <header>
+        <h1>Trading Simulation Platform - Account Management</h1>
+    </header>
+    <main>
+        <section id="account-creation" class="card">
+            <h2>Create Account</h2>
+            <form id="create-account-form">
+                <label for="user_id">User ID</label>
+                <input type="text" id="user_id" name="user_id" placeholder="Enter User ID" required>
+                
+                <label for="initial_deposit">Initial Deposit</label>
+                <input type="number" id="initial_deposit" name="initial_deposit" placeholder="Enter Initial Deposit" required>
+                
+                <button type="submit">Create Account</button>
+            </form>
+        </section>
 
-        function createAccount() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            fetch('/api/create_account', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password })
-            })
-            .then(response => response.json())
-            .then(data => document.getElementById('accountMessage').innerText = data.message);
-        }
+        <section id="funds-management" class="card">
+            <h2>Manage Funds</h2>
+            <form id="deposit-form">
+                <label for="deposit_amount">Deposit Amount</label>
+                <input type="number" id="deposit_amount" name="deposit_amount" placeholder="Enter Amount" required>
+                
+                <button type="submit">Deposit</button>
+            </form>
 
-        function deposit() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            fetch('/api/deposit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, amount })
-            })
-            .then(response => response.json())
-            .then(data => document.getElementById('balanceMessage').innerText = data.message);
-        }
+            <form id="withdraw-form">
+                <label for="withdraw_amount">Withdraw Amount</label>
+                <input type="number" id="withdraw_amount" name="withdraw_amount" placeholder="Enter Amount" required>
+                
+                <button type="submit">Withdraw</button>
+            </form>
+        </section>
 
-        function withdraw() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            fetch('/api/withdraw', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, amount })
-            })
-            .then(response => response.json())
-            .then(data => document.getElementById('balanceMessage').innerText = data.message);
-        }
+        <section id="trade-execution" class="card">
+            <h2>Trade Execution</h2>
+            <form id="trade-form">
+                <label for="trade_symbol">Symbol</label>
+                <input type="text" id="trade_symbol" name="trade_symbol" placeholder="Enter Symbol (e.g., AAPL, TSLA)" required>
 
-        function buyShares() {
-            const symbol = document.getElementById('symbol').value;
-            const quantity = parseInt(document.getElementById('quantity').value);
-            fetch('/api/buy_shares', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, symbol, quantity })
-            })
-            .then(response => response.json())
-            .then(data => document.getElementById('tradeMessage').innerText = data.message);
-        }
+                <label for="trade_quantity">Quantity</label>
+                <input type="number" id="trade_quantity" name="trade_quantity" placeholder="Enter Quantity" required>
 
-        function sellShares() {
-            const symbol = document.getElementById('symbol').value;
-            const quantity = parseInt(document.getElementById('quantity').value);
-            fetch('/api/sell_shares', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, symbol, quantity })
-            })
-            .then(response => response.json())
-            .then(data => document.getElementById('tradeMessage').innerText = data.message);
-        }
+                <label for="transaction_type">Transaction Type</label>
+                <select id="transaction_type" name="transaction_type" required>
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                </select>
+                
+                <button type="submit">Execute Trade</button>
+            </form>
+        </section>
 
-        function reportHoldings() {
-            fetch(`/api/report_holdings?user_id=${userId}`)
-            .then(response => response.json())
-            .then(data => document.getElementById('reportMessage').innerText = JSON.stringify(data.holdings));
-        }
+        <section id="portfolio-management" class="card">
+            <h2>Portfolio Management</h2>
+            <button id="view-portfolio-value">View Portfolio Value</button>
+            <button id="view-profit-loss">View Profit/Loss</button>
+            <button id="view-holdings">View Holdings</button>
+            <button id="view-transactions">View Transactions</button>
+        </section>
 
-        function reportProfitLoss() {
-            fetch(`/api/report_profit_loss?user_id=${userId}`)
-            .then(response => response.json())
-            .then(data => document.getElementById('reportMessage').innerText = `Profit/Loss: ${data.profit_loss}`);
-        }
+        <section id="results" class="card">
+            <h2>Results</h2>
+            <div id="result-output">
+                <!-- Dynamic results output area -->
+            </div>
+        </section>
+    </main>
 
-        function listTransactions() {
-            fetch(`/api/list_transactions?user_id=${userId}`)
-            .then(response => response.json())
-            .then(data => {
-                const transactions = data.transactions.map(t => `${t.date}: ${t.transaction_type} ${t.quantity} ${t.symbol} at ${t.price}`).join('\n');
-                document.getElementById('reportMessage').innerText = transactions;
-            });
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
+
 </html>

@@ -1,106 +1,101 @@
 ```markdown
-# System Design Document: Trading Simulation Platform Account Management System
+# System Design: Trading Simulation Platform Account Management
 
 ## Overview
-The system is designed to manage user accounts within a trading simulation platform. It will handle account creation, fund management, buying/selling of shares, and provide comprehensive reporting on user portfolios, holdings, and transactions. The design is modular, scalable, and aligns both frontend and backend development needs.
+
+This design outlines the components and interactions necessary to implement a simple account management system for a trading simulation platform. The focus is on backend infrastructure, with clear interactions exposed for frontend consumption through API endpoints.
 
 ## Architecture
-The system will be composed of several key classes and modules, primarily split into authentication, account management, and transaction management. 
 
-### Backend Modules
+### Key Components
 
-#### 1. User Management
-**Class: User**
-- **Attributes:**
-  - `user_id: int`
-  - `name: str`
-  - `email: str`
-  - `password_hash: str`
+1. **User Management**
+   - Responsible for account creation, management, and fund operations (deposit, withdraw).
 
-- **Methods:**
-  - `create_user(name: str, email: str, password: str) -> User`: Registers a new user and hashes the password.
-  - `authenticate(email: str, password: str) -> bool`: Validates user login details.
+2. **Trading Operations**
+   - Handles recording of share transactions, validations against user funds and shares, and maintains transaction history.
 
-#### 2. Account Management
-**Class: Account**
-- **Attributes:**
-  - `account_id: int`
-  - `user_id: int`
-  - `balance: float`
-  - `initial_deposit: float`
+3. **Portfolio Management**
+   - Calculates the total value of a user's portfolio, profit/loss from initial deposits, and provides report generation.
 
-- **Methods:**
-  - `deposit(amount: float) -> bool`: Increases account balance.
-  - `withdraw(amount: float) -> bool`: Decreases account balance after checks.
-  - `calculate_profit_loss() -> float`: Calculates profit or loss based on current portfolio value against initial deposit.
+### Backend Module Design
 
-#### 3. Portfolio Management
-**Class: Portfolio**
-- **Attributes:**
-  - `portfolio_id: int`
-  - `user_id: int`
-  - `holdings: Dict[str, int]`  # Key: Symbol, Value: Quantity of shares
+#### Classes
 
-- **Methods:**
-  - `add_shares(symbol: str, quantity: int, buy_price: float) -> bool`: Adds shares to the portfolio after funding checks.
-  - `remove_shares(symbol: str, quantity: int, sell_price: float) -> bool`: Removes shares from the portfolio after checking availability.
-  - `calculate_total_value() -> float`: Computes the total value of the portfolio.
-  - `report_holdings() -> Dict[str, int]`: Returns current share holdings.
-    
-#### 4. Transaction Management
-**Class: Transaction**
-- **Attributes:**
-  - `transaction_id: int`
-  - `user_id: int`
-  - `symbol: str`
-  - `quantity: int`
-  - `transaction_type: str`  # 'BUY' or 'SELL'
-  - `price: float`
-  - `date: datetime`
+1. **User**
+   - Attributes:
+     - `user_id: str`
+     - `balance: float`
+     - `initial_deposit: float`
 
-- **Methods:**
-  - `record_transaction(symbol: str, quantity: int, transaction_type: str, price: float) -> bool`: Logs the details of a trading transaction.
+   - Methods:
+     - `create_account(user_id, initial_deposit): User`
+     - `deposit_funds(amount: float): bool`
+     - `withdraw_funds(amount: float): bool`
 
-### Utility Functions
+2. **ShareTransaction**
+   - Attributes:
+     - `user_id: str`
+     - `symbol: str`
+     - `quantity: int`
+     - `price_at_transaction: float`
+     - `transaction_type: str ("buy" or "sell")`
+     - `timestamp: datetime`
 
-- `get_share_price(symbol: str) -> float`: Fetches the current market price of a share.
+3. **Portfolio**
+   - Attributes:
+     - user_id: str
+     - holdings: Dict[str, int] (maps symbol to quantity)
+   
+   - Methods:
+     - `calculate_portfolio_value(): float`
+     - `calculate_profit_loss(): float`
+     - `report_holdings(): Dict[str, int]`
+     - `report_transactions(): List[ShareTransaction]`
 
-### APIs
+#### Backend Logic
 
-- **POST /api/create_account**
-  - Request Body: `{ "name": "str", "email": "str", "password": "str" }`
-  - Response: `{ "message": "Account created", "user_id": "int" }`
+- **User Management Logic**
+  - `create_account(user_id, initial_deposit)`: Initializes a `User` with a specified initial deposit.
+  - `deposit_funds(user_id, amount)`: Adds funds to the user balance.
+  - `withdraw_funds(user_id, amount)`: Deducts funds if balance suffices.
 
-- **POST /api/deposit**
-  - Request Body: `{ "user_id": "int", "amount": "float" }`
-  - Response: `{ "message": "Deposit successful", "balance": "float" }`
+- **Trading Operations Logic**
+  - `record_transaction(user_id, symbol, quantity, transaction_type)`: Records a transaction and updates portfolio holdings and balance. Validates balance and available shares before executing.
 
-- **POST /api/withdraw**
-  - Request Body: `{ "user_id": "int", "amount": "float" }`
-  - Response: `{ "message": "Withdrawal successful", "balance": "float" }` or error message if the operation fails.
+- **Portfolio Management Logic**
+  - `calculate_portfolio_value(user_id)`: Uses `get_share_price(symbol)` to determine the current value of holdings.
+  - `calculate_profit_loss(user_id)`: Computes variations between current portfolio value and initial deposit.
+  - `report_holdings(user_id)`: Provides a snapshot of user share quantities.
+  - `report_transactions(user_id)`: Returns a list of all transactions made by the user.
 
-- **POST /api/buy_shares**
-  - Request Body: `{ "user_id": "int", "symbol": "str", "quantity": "int" }`
-  - Response: `{ "message": "Shares purchased", "total_value": "float" }` or error message if the operation fails.
+### API Endpoints
 
-- **POST /api/sell_shares**
-  - Request Body: `{ "user_id": "int", "symbol": "str", "quantity": "int" }`
-  - Response: `{ "message": "Shares sold", "total_value": "float" }` or error message if the operation fails.
+1. **User Endpoints**
+   - `POST /api/users/create`: Body should include `user_id` and `initial_deposit`.
+   - `POST /api/users/deposit`: Body should include `user_id` and `amount`.
+   - `POST /api/users/withdraw`: Body should include `user_id` and `amount`.
 
-- **GET /api/report_holdings**
-  - Query Params: `user_id: int`
-  - Response: `{ "holdings": { "symbol": "quantity" } }`
+2. **Trading Endpoints**
+   - `POST /api/trades/execute`: Body should include `user_id`, `symbol`, `quantity`, and `transaction_type`.
 
-- **GET /api/report_profit_loss**
-  - Query Params: `user_id: int`
-  - Response: `{ "profit_loss": "float" }`
-
-- **GET /api/list_transactions**
-  - Query Params: `user_id: int`
-  - Response: `{ "transactions": [ { "transaction_id": "int", "symbol": "str", "quantity": "int", "transaction_type": "str", "price": "float", "date": "datetime" } ] }`
+3. **Portfolio Endpoints**
+   - `GET /api/portfolio/value`: Query string should include `user_id`.
+   - `GET /api/portfolio/profit-loss`: Query string should include `user_id`.
+   - `GET /api/portfolio/holdings`: Query string should include `user_id`.
+   - `GET /api/portfolio/transactions`: Query string should include `user_id`.
 
 ### Frontend Interactions
-- The frontend will interact with these APIs to enable users to create and manage their accounts, execute trades, and view their portfolios. Each action will trigger appropriate calls to the backend APIs, ensuring cohesive and smooth user experience with validations and error handling.
 
-This system design covers a robust framework for handling user accounts and transactions while ensuring security, reliability, and scalability.
+- **Account Management**: Interfaces for depositing, withdrawing, and viewing account balances.
+- **Trading Interfaces**: Tools to execute trades, view transaction history, and validate potential trades.
+- **Portfolio Insights**: Views to monitor current holdings, portfolio value, and profit/loss analyses.
+
+## Considerations
+
+- **Concurrency Management**: Ensure race conditions are handled in transactions.
+- **Error Handling**: Proper handling of insufficient funds, non-existent shares, and user accounts.
+- **Security**: Secure endpoints, potentially requiring authentication/authorization mechanisms.
+  
+This comprehensive design includes necessary classes, methods, and APIs, ready for implementation into a scalable and modular account management system.
 ```

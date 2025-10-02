@@ -1,75 +1,46 @@
 import unittest
-
-# Assuming the following basic implementation of Account class
-class Account:
-    def __init__(self, user_id, initial_deposit):
-        self.account_id = 0  # Simulating autoincrement
-        self.user_id = user_id
-        self.initial_deposit = initial_deposit
-        self.balance = initial_deposit
-
-    def deposit(self, amount):
-        if amount <= 0:
-            return False
-        self.balance += amount
-        return True
-
-    def withdraw(self, amount):
-        if amount <= 0 or amount > self.balance:
-            return False
-        self.balance -= amount
-        return True
-
-    def calculate_profit_loss(self):
-        return self.balance - self.initial_deposit
-
+from accounts import User
 
 class TestAccount(unittest.TestCase):
-    def test_initialization(self):
-        account = Account(user_id=1, initial_deposit=100.0)
-        self.assertEqual(account.balance, 100.0)
-        self.assertEqual(account.initial_deposit, 100.0)
+    def setUp(self):
+        # Create a new account for testing
+        self.account = User.create_account('user123', 1000)
 
-    def test_deposit_positive_amount(self):
-        """Test depositing a positive amount"""
-        account = Account(user_id=1, initial_deposit=100.0)
-        result = account.deposit(50.0)
+    def test_create_account(self):
+        # Test if account is created with the correct initial balance
+        self.assertEqual(self.account.user_id, 'user123')
+        self.assertEqual(self.account.balance, 1000)
+        self.assertEqual(self.account.initial_deposit, 1000)
+
+    def test_deposit_funds(self):
+        # Test depositing funds to the account
+        result = self.account.deposit_funds(500)
         self.assertTrue(result)
-        self.assertEqual(account.balance, 150.0)
+        self.assertEqual(self.account.balance, 1500)
+
+    def test_withdraw_funds(self):
+        # Test withdrawing funds from the account
+        result = self.account.withdraw_funds(300)
+        self.assertTrue(result)
+        self.assertEqual(self.account.balance, 700)
+
+    def test_withdraw_funds_insufficient_balance(self):
+        # Test withdrawing more funds than available in the account
+        result = self.account.withdraw_funds(1100)
+        self.assertFalse(result)
+        self.assertEqual(self.account.balance, 1000)
 
     def test_deposit_negative_amount(self):
-        """Test depositing a negative amount"""
-        account = Account(user_id=1, initial_deposit=100.0)
-        result = account.deposit(-50.0)
+        # Test depositing a negative amount (edge case)
+        result = self.account.deposit_funds(-100)
         self.assertFalse(result)
-        self.assertEqual(account.balance, 100.0)
+        self.assertEqual(self.account.balance, 1000)
 
-    def test_withdraw_valid_amount(self):
-        """Test withdrawing a valid amount"""
-        account = Account(user_id=1, initial_deposit=100.0)
-        result = account.withdraw(50.0)
-        self.assertTrue(result)
-        self.assertEqual(account.balance, 50.0)
-
-    def test_withdraw_overdraft(self):
-        """Test withdrawing more than balance"""
-        account = Account(user_id=1, initial_deposit=100.0)
-        result = account.withdraw(150.0)
+    def test_withdraw_funds_negative_amount(self):
+        # Test withdrawing a negative amount (edge case)
+        result = self.account.withdraw_funds(-100)
         self.assertFalse(result)
-        self.assertEqual(account.balance, 100.0)
+        self.assertEqual(self.account.balance, 1000)
 
-    def test_withdraw_negative_amount(self):
-        """Test withdrawing a negative amount"""
-        account = Account(user_id=1, initial_deposit=100.0)
-        result = account.withdraw(-50.0)
-        self.assertFalse(result)
-        self.assertEqual(account.balance, 100.0)
-
-    def test_calculate_profit_loss(self):
-        account = Account(user_id=1, initial_deposit=100.0)
-        account.deposit(50.0)
-        account.withdraw(70.0)
-        self.assertEqual(account.calculate_profit_loss(), -20.0)
-
-
-unittest.main(argv=[''], verbosity=2, exit=False)
+if __name__ == '__main__':
+    unittest.main()

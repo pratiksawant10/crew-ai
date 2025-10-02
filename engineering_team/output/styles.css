@@ -1,0 +1,118 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+header {
+    background: linear-gradient(90deg, #203a43, #2c5364);
+    color: #fff;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+main {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #2c5364;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+button:hover {
+    background-color: #1e3b47;
+}
+
+button:active {
+    background-color: #123136;
+}
+
+#results {
+    padding-top: 10px;
+}
+
+#result-output {
+    background-color: #e3e3e3;
+    padding: 15px;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+button#view-portfolio-value, 
+button#view-profit-loss, 
+button#view-holdings, 
+button#view-transactions {
+    margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px;
+    }
+    .card {
+        padding: 15px;
+    }
+    button {
+        width: 100%;
+    }
+}

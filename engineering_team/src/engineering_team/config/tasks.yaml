@@ -10,22 +10,59 @@ design_task:
   output_file: output/{module_name}_design.md
 
 
-frontend_task:
+frontend_html_task:
   description: >
-    Build a simple HTML/JavaScript frontend that demonstrates the given backend module {module_name}.
-    The frontend should allow a user to interact with the backend class {class_name}, visualize results,
-    and serve as a lightweight prototype.
+    Build a polished, modern HTML frontend to demonstrate the backend module {module_name}.
+    The UI should feel professional, visually appealing, and responsive.
+    Use semantic HTML elements, proper layout, sections, headers, and containers.
+    Include placeholders for input fields, buttons, and results that the user can interact with.
+    The design should include:
+      - Cards or sections for different functionalities
+      - Clean typography, spacing, and alignment
+      - Buttons with hover effects
+      - Responsive layout for mobile and desktop
+    Link to styles.css for styling and script.js for interactions.
+    IMPORTANT: Output **only raw HTML code**, no markdown or code fences.
     Here are the requirements: {requirements}
   expected_output: >
-    A single HTML/JavaScript file (index.html with embedded JS or linked script.js) that demonstrates
-    the backend class through basic user interactions.
-    IMPORTANT: Output ONLY the raw HTML/JS code without any markdown formatting, code block delimiters, or backticks.
-    The output should be valid code that can be directly saved and opened in a browser.
+    Raw HTML code for index.html (ready to save), linking to styles.css and script.js,
+    structured with containers, cards, headers, buttons, and input areas.
+    Do NOT include any markdown/code fences.
   agent: frontend_engineer
   context:
     - design_task
   output_file: output/index.html
 
+frontend_css_task:
+  description: >
+    Write all CSS for the frontend (index.html) in a separate file styles.css.
+    Make the UI visually appealing and “fancy”:
+      - Use card-style containers with shadows and rounded corners
+      - Gradient backgrounds for headers or sections
+      - Stylish buttons with hover/active effects
+      - Modern typography and spacing
+      - Responsive layout for mobile and desktop
+    IMPORTANT: Output **only raw CSS code**, no markdown or code fences.
+    Here are the requirements: {requirements}
+  expected_output: >
+    Raw CSS code for styles.css (ready to save).
+  agent: frontend_engineer
+  context:
+    - frontend_html_task
+  output_file: output/styles.css
+
+frontend_js_task:
+  description: >
+    Write all JavaScript for the frontend (index.html) in a separate file script.js.
+    Handle interactions with the backend class {class_name}.
+    IMPORTANT: Output **only raw JS code**, do NOT include any markdown formatting or ```javascript code fences.
+    Here are the requirements: {requirements}
+  expected_output: >
+    Raw JavaScript code for script.js (ready to save). **Do not include code fences or markdown.**
+  agent: frontend_engineer
+  context:
+    - frontend_html_task
+  output_file: output/script.js
 
 test_task:
   description: >
